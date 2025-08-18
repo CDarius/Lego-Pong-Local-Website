@@ -5,7 +5,7 @@ import type { CancelTokenSource } from 'axios';
 import api from '@/api/api';
 import { debounce } from '@/utils/debounce';
 import type { GameSettingItem, ReadGameSettingRespose, WriteGameSettingRespose } from '@/api/settingsApi';
-import NumericValueEditor from './NumericValueEditor.vue';
+import NumericValueEditor from '../NumericValueEditor.vue';
 
 const props = defineProps<{
     groupName: string,

@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useGameSettingsStore } from '@/stores/game_settings'
 import PageScrollableLayout from '@/components/PageScrollableLayout.vue'
-import EditSetting from '@/components/EditSetting.vue';
+import EditSetting from '@/components/settings/EditSetting.vue';
 
 const route = useRoute();
 const settingStore = useGameSettingsStore();
@@ -20,10 +20,8 @@ const settingGroup = computed(() => settingStore.groups.find((x) => x.name == ro
         </template>
 
         <div v-if="settingGroup != null" class="container-md my-3">
-            <EditSetting v-for="setting in settingGroup.settings" :key="setting.name"
-                :group-name="settingGroup.name"
-                :setting="setting"
-                :class="'mb-3'">
+            <EditSetting v-for="setting in settingGroup.settings" :key="setting.name" :group-name="settingGroup.name"
+                :setting="setting" :class="'mb-3'">
             </EditSetting>
         </div>
     </PageScrollableLayout>

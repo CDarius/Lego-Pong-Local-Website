@@ -19,14 +19,12 @@ const emit = defineEmits<{
 
 const internalValue = ref(0);
 const fieldWidth = computed(() => {
-    var w = props.numOfDigits > 0 ? props.numOfDigits : 1;
+    const w = props.numOfDigits > 0 ? props.numOfDigits : 1;
     return (w + 6) + 'em';
 });
 const decimalDigits = computed(() => {
     return props.stepChange?.getNumOfDecimalDigits();
 });
-
-const progressPercentage = ref(100);
 
 onBeforeMount(() => {
     internalValue.value = props.value
@@ -47,7 +45,7 @@ function incrementValue() {
     if (props.stepChange == null)
         return;
 
-    var newValue = internalValue.value + props.stepChange;
+    let newValue = internalValue.value + props.stepChange;
     if (props.maxValue != null && newValue > props.maxValue) {
         newValue = props.maxValue;
     }
@@ -62,7 +60,7 @@ function decrementValue() {
     if (props.stepChange == null)
         return;
 
-    var newValue = internalValue.value - props.stepChange;
+    let newValue = internalValue.value - props.stepChange;
     if (props.minValue != null && newValue < props.minValue) {
         newValue = props.minValue;
     }
@@ -74,7 +72,7 @@ function decrementValue() {
 }
 
 function updateValue(event: Event) {
-    var newValue = parseFloat((event.target as HTMLInputElement).value);
+    let newValue = parseFloat((event.target as HTMLInputElement).value);
     if (props.minValue != null && newValue < props.minValue) {
         newValue = props.minValue;
     }
