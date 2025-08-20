@@ -2,32 +2,32 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import api from '@/api/api';
-import type { ListGameFunctionsResponse, GameFunctionItem } from '@/api/functionsApi'
+import type { ListGameFunctionsResponse, GameFunctionsGroup } from '@/api/functionsApi'
 
 export const useGameFunctionsStore = defineStore('gamefunctions', () => {
     // State
-    const functions = ref<GameFunctionItem[]>([]);
-    const functionsLoading = ref(false);
-    const functionsLoadingError = ref<string | null>(null);
+    const groups = ref<GameFunctionsGroup[]>([]);
+    const groupsLoading = ref(false);
+    const groupsLoadingError = ref<string | null>(null);
 
     // Actions
     const fetchGameFunctionsList = async() => {
-        functionsLoading.value = true;
-        functionsLoadingError.value = null;
+        groupsLoading.value = true;
+        groupsLoadingError.value = null;
 
         try {
-            const response = await api.get<ListGameFunctionsResponse>('/functions');
-            functions.value = response.data.functions;
+            const response = await api.get<ListGameFunctionsResponse>('/webfunctions');
+            groups.value = response.data.functions;
         } catch(err) {
-            functionsLoadingError.value = 'Failed to get functions list';
+            groupsLoadingError.value = 'Failed to get functions list';
             console.error('/functions API Error:', err);            
         } finally {
-            functionsLoading.value = false;
+            groupsLoading.value = false;
         }
     }
 
     return {
-        functions, functionsLoading, functionsLoadingError,
+        groups, groupsLoading, groupsLoadingError,
         fetchGameFunctionsList
     };
 });

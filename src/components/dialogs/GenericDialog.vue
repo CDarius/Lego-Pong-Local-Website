@@ -48,12 +48,10 @@
     transition: opacity 0.5s ease;
 }
 
-
 .v-enter-from,
 .v-leave-to {
     opacity: 0;
 }
-
 
 .v-enter-active dialog {
     transition: transform 0.3s ease-in;
@@ -65,11 +63,11 @@
 }
 
 .v-enter-from dialog {
-    transform: translateY(-40%);
+    transform: translateY(-40%) scale(80%);
 }
 
 .v-leave-to dialog {
-    transform: translateY(40%);
+    transform: translateY(40%) scale(80%);
 }
 
 dialog {

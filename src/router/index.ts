@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import SettingsView from '../views/SettingsView.vue'
 import SettingGroupView from '@/views/SettingGroupView.vue'
 import FunctionsView from '../views/FunctionsView.vue'
+import FunctionGroupView from '@/views/FunctionGroupView.vue'
+import FunctionView from '@/views/FunctionView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +27,14 @@ const router = createRouter({
       path: '/functions',
       name: 'functions',
       component: FunctionsView
+    },
+    {
+      path: '/functions/:group',
+      component: FunctionGroupView
+    },
+    {
+      path: '/functions/:group/:function',
+      component: FunctionView
     },
   ],
 })
