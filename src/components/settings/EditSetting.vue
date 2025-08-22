@@ -2,15 +2,17 @@
 import { ref, onBeforeMount, computed } from 'vue';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
-import api from '@/api/api';
 import { debounce } from '@/utils/debounce';
-import type { GameSettingItem, ReadGameSettingRespose, WriteGameSettingRespose } from '@/api/settingsApi';
+import type { GameSettingItem } from '@/api/settingsApi';
 import NumericValueEditor from '../NumericValueEditor.vue';
+import { useGameSettingsStore } from '@/stores/game_settings'
 
 const props = defineProps<{
     groupName: string,
     setting: GameSettingItem,
 }>();
+
+const settingStore = useGameSettingsStore();
 
 const loadingValue = ref(true);
 const loadingValueFailed = ref(false);
@@ -30,7 +32,7 @@ async function fetchSettingValue() {
     loadingValueFailed.value = false;
 
     try {
-        const response = await api.get<ReadGameSettingRespose>(`/settings/${props.groupName}/${props.setting.name}`);
+        const response = await settingStore.readGameSettingValue(props.groupName, props.setting.name);
         settingValue.value = response.data.value;
     } catch (error) {
         loadingValueFailed.value = true;
@@ -51,12 +53,7 @@ const debouncedUpdateValue = debounce(async (value: number) => {
     cancelTokenSource = axios.CancelToken.source();
 
     try {
-        const response = await api.put<WriteGameSettingRespose>(
-            `/settings/${props.groupName}/${props.setting.name}`, { value: value },
-            {
-                cancelToken: cancelTokenSource.token,
-            }
-        );
+        const response = await settingStore.writeGameSettingValue(props.groupName, props.setting.name, value, cancelTokenSource);
         settingValue.value = response.data.value;
     } catch (error) {
         if (!axios.isCancel(error)) {
@@ -67,7 +64,7 @@ const debouncedUpdateValue = debounce(async (value: number) => {
         cancelTokenSource = null;
         updateInProgress.value = false;
     }
-}, 500);
+}, 1000);
 
 function updateSettingValue(value: number) {
     if (props.setting.minValue != null && value < props.setting.minValue) {

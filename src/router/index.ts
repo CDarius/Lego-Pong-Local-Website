@@ -5,6 +5,8 @@ import SettingGroupView from '@/views/SettingGroupView.vue'
 import FunctionsView from '../views/FunctionsView.vue'
 import FunctionGroupView from '@/views/FunctionGroupView.vue'
 import FunctionView from '@/views/FunctionView.vue'
+import BackupView from '@/views/BackupView.vue'
+import RestoreView from '@/views/RestoreView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +38,14 @@ const router = createRouter({
       path: '/functions/:group/:function',
       component: FunctionView
     },
+    {
+      path: '/backup',
+      component: BackupView
+    },
+    {
+      path: '/restore',
+      component: RestoreView
+    }
   ],
 })
 

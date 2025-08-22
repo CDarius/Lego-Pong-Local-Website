@@ -1,8 +1,9 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import type { CancelTokenSource } from 'axios';
 
 import api from '@/api/api';
-import type { ListGameSettingsResponse, GameSettingsGroup } from '@/api/settingsApi'
+import type { ListGameSettingsResponse, GameSettingsGroup, ReadGameSettingRespose, WriteGameSettingRespose } from '@/api/settingsApi'
 
 export const useGameSettingsStore = defineStore('gamesettings', () => {
     // State
@@ -26,8 +27,23 @@ export const useGameSettingsStore = defineStore('gamesettings', () => {
         }
     }
 
+    const readGameSettingValue = async(groupName: string, settingName: string) => {
+        return await api.get<ReadGameSettingRespose>(`/settings/${groupName}/${settingName}`);
+    }
+
+    const writeGameSettingValue = async(groupName: string, settingName: string, value: unknown, cancelTokenSource: CancelTokenSource | null = null) => {
+        return await api.put<WriteGameSettingRespose>(
+            `/settings/${groupName}/${settingName}`, { value: value },
+            {
+                cancelToken: cancelTokenSource?.token,
+            }
+        );
+    }
+
     return {
         groups, groupsLoading, groupsLoadingError,
-        fetchGameSettingsList
+        fetchGameSettingsList,
+        readGameSettingValue,
+        writeGameSettingValue,
     };
 });
