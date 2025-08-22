@@ -51,11 +51,12 @@ const debouncedUpdateValue = debounce(async (value: number) => {
     cancelTokenSource = axios.CancelToken.source();
 
     try {
-        const response = await api.put<WriteGameSettingRespose>(`/settings/${props.groupName}/${props.setting.name}`, value,
+        const response = await api.put<WriteGameSettingRespose>(
+            `/settings/${props.groupName}/${props.setting.name}`, { value: value },
             {
                 cancelToken: cancelTokenSource.token,
-            });
-
+            }
+        );
         settingValue.value = response.data.value;
     } catch (error) {
         if (!axios.isCancel(error)) {
@@ -77,7 +78,6 @@ function updateSettingValue(value: number) {
     }
     if (value !== settingValue.value) {
         updateInProgress.value = true;
-        console.log('updateSettingValue', value);
         debouncedUpdateValue(value);
     }
 }
