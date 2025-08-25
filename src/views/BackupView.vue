@@ -33,28 +33,31 @@
         </div>
     </div>
 
-    <div class="py-2 ps-2 bg-light">
-        <h1>Settings backup</h1>
-    </div>
+    <div v-else>
+        <div class="py-2 ps-2 mb-5 bg-light">
+            <h1>Settings backup</h1>
+        </div>
 
-    <div v-if="backupInProgress" class="d-grid col-12 col-md-6 mx-auto mt-5 px-4">
-        <!-- Current settting -->
-        <div><small class="text-body-secondary">{{ currentSettingPath }}</small></div>
-        <!-- Profress bar -->
-        <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75"
-            aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{ width: progress + '%' }">
-                {{ Math.round(progress) }}%
+        <div v-if="backupInProgress" class="d-grid col-12 col-md-6 mx-auto px-4">
+            <!-- Current settting -->
+            <div><small class="text-body-secondary">{{ currentSettingPath }}</small></div>
+            <!-- Progress bar -->
+            <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75"
+                aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{ width: progress + '%' }">
+                    {{ Math.round(progress) }}%
+                </div>
             </div>
         </div>
-    </div>
-    <div v-else class="d-grid col-12 col-md-6 mx-auto mt-5 px-4">
-        <h5>Backup completed</h5>
-        <div>Successfully read: <span class="text-success">{{ numberSuccessfulReadGameSettings }}</span> settings</div>
-        <div v-if="numberFailedReadGameSettings > 0">
-            Failed read: <span class="text-danger">{{ numberFailedReadGameSettings }}</span> settings
+        <div v-else class="d-grid col-12 col-md-6 mx-auto px-4">
+            <h5>Backup completed</h5>
+            <div>Successfully read: <span class="text-success">{{ numberSuccessfulReadGameSettings }}</span> settings
+            </div>
+            <div v-if="numberFailedReadGameSettings > 0">
+                Failed read: <span class="text-danger">{{ numberFailedReadGameSettings }}</span> settings
+            </div>
+            <button class="btn btn-primary mt-3" @click="goBack">Go back</button>
         </div>
-        <button class="btn btn-primary mt-3" @click="goBack">Go back</button>
     </div>
 </template>
 
@@ -68,7 +71,7 @@ const settingStore = useGameSettingsStore();
 const router = useRouter();
 
 const backupInProgress = ref(true);
-const currentSettingPath = ref('/settings/api/dopop');
+const currentSettingPath = ref('');
 const progress = ref(0);
 
 const showConfirmSaveDialog = ref(false);
@@ -142,7 +145,7 @@ function saveBackup() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `pong-settings-backup-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.json`;
+    a.download = `pong-settings-backup-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.pong`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

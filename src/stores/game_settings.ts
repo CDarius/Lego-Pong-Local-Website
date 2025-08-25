@@ -40,10 +40,20 @@ export const useGameSettingsStore = defineStore('gamesettings', () => {
         );
     }
 
+    const saveSettingsToNVS = async() => {
+        await api.get('/settings/storetonvs')
+    }
+
+    const reloadSettingsFromNVS = async() => {
+        await api.get('/settings/restorefromnvs')
+    }
+
     return {
         groups, groupsLoading, groupsLoadingError,
         fetchGameSettingsList,
         readGameSettingValue,
         writeGameSettingValue,
+        saveSettingsToNVS,
+        reloadSettingsFromNVS
     };
 });

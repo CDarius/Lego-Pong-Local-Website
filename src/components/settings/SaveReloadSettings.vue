@@ -49,13 +49,15 @@
 
 <script setup lang="ts">
 import { ref, } from 'vue';
-import api from '@/api/api';
+import { useGameSettingsStore } from '@/stores/game_settings'
 import SpinnerBackdrop from '@/components/SpinnerBackdrop.vue';
 import GenericDialog from '@/components/dialogs/GenericDialog.vue';
 import ErrorDialog from '@/components/dialogs/ErrorDialog.vue';
 
 const saving = ref(false);
 const restoring = ref(false);
+
+const settingStore = useGameSettingsStore();
 
 const showSaveParamDialog = ref(false);
 const showReloadParamDialog = ref(false);
@@ -74,7 +76,7 @@ function clickReloadSettings() {
 async function saveSettings() {
     try {
         saving.value = true;
-        await api.get('/settings/storetonvs')
+        await settingStore.saveSettingsToNVS();
     } catch (error) {
         console.error('Error saving settings:', error);
         errorText.value = "Error saving settings: " + (error instanceof Error ? error.message : 'Unknown error');
@@ -87,7 +89,7 @@ async function saveSettings() {
 async function reloadSettings() {
     try {
         restoring.value = true;
-        await api.get('/settings/restorefromnvs');
+        await settingStore.reloadSettingsFromNVS();
     } catch (error) {
         console.error('Error reloading settings:', error);
         errorText.value = "Error reloading settings: " + (error instanceof Error ? error.message : 'Unknown error');
