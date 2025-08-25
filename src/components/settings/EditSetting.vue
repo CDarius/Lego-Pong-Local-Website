@@ -95,10 +95,13 @@ function updateSettingValue(value: number) {
                 <i class="bi bi-exclamation-triangle"></i>
                 Value read failed
             </div>
-            <NumericValueEditor v-if="showValueEditor" :value="settingValue" :step-change="setting.stepChange"
-                :min-value="setting.minValue" class="float-end" :max-value="setting.maxValue"
-                :update-in-progress="updateInProgress" @updateValue="updateSettingValue">
-            </NumericValueEditor>
+            <div v-if="showValueEditor" class="d-flex justify-content-end align-items-center">
+                <div class="me-2">{{ setting.unit }}</div>
+                <NumericValueEditor :value="settingValue" :step-change="setting.stepChange"
+                    :min-value="setting.minValue" class="float-end" :max-value="setting.maxValue"
+                    :update-in-progress="updateInProgress" @updateValue="updateSettingValue">
+                </NumericValueEditor>
+            </div>
         </div>
     </div>
 </template>
