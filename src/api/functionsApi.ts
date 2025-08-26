@@ -27,7 +27,7 @@ export interface GetFunctionStatusResponse {
     functionName: string;
     action: string;
     status: FunctionStatus;
-    failureDescription: string | null;
+    failure_description: string | null;
 }
 
 export interface GetFunctionPrerequisitesResponse {
@@ -42,6 +42,6 @@ export interface GetFunctionStartResponse {
     functionName: string;
     action: string;
     status: FunctionStatus;
-    failureDescription: string | null;
+    failure_description: string | null;
 }
 

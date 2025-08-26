@@ -151,7 +151,7 @@ async function getFunctionStatus(): Promise<[FunctionStatus, string | null]> {
         return [FunctionStatus.Unknown, null];
     try {
         const result = await api.get<GetFunctionStatusResponse>(`/webfunctions/${groupName}/${functionName}/status`)
-        return [parseFunctionStatus(result.data.status as unknown as string), result.data.failureDescription];
+        return [parseFunctionStatus(result.data.status as unknown as string), result.data.failure_description];
     } catch (error) {
         console.error('Error fetching function status:', error);
         throw error;
@@ -195,7 +195,7 @@ async function startFunction() {
 
         functionStatus.value = result.data.status;
         if (result.data.status === FunctionStatus.Failed) {
-            errorDialogMessage.value = result.data.failureDescription || 'Function failed to start.';
+            errorDialogMessage.value = result.data.failure_description || 'Function failed to start.';
             showErrorDialog.value = true;
         }
     } catch (error) {
