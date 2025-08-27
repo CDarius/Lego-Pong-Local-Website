@@ -109,9 +109,15 @@ function updateValue(event: Event) {
     background-color: #BAC8D3 !important;
 }
 
-/*#76AEFC */
-/* 9FC6F9*/
+/* Hide number input spinners for all browsers */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
-/*6c757d*/
-/* A4B1BC */
+input[type="number"] {
+    -moz-appearance: textfield;
+    /* Firefox */
+}
 </style>
