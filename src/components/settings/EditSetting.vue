@@ -42,6 +42,11 @@ async function fetchSettingValue() {
     }
 }
 
+// Expose the function to parent components
+defineExpose({
+    fetchSettingValue
+});
+
 let cancelTokenSource: CancelTokenSource | null = null;
 
 const debouncedUpdateValue = debounce(async (value: number) => {
