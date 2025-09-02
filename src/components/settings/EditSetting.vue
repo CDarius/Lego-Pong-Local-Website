@@ -33,7 +33,7 @@ async function fetchSettingValue() {
 
     try {
         const response = await settingStore.readGameSettingValue(props.groupName, props.setting.name);
-        settingValue.value = response.data.value;
+        settingValue.value = response.value;
     } catch (error) {
         loadingValueFailed.value = true;
         console.error('Error fetching setting value:', error);

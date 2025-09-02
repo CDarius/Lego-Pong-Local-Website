@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { CancelTokenSource } from 'axios';
@@ -27,8 +28,39 @@ export const useGameSettingsStore = defineStore('gamesettings', () => {
         }
     }
 
-    const readGameSettingValue = async(groupName: string, settingName: string) => {
-        return await api.get<ReadGameSettingRespose>(`/settings/${groupName}/${settingName}`);
+    // Queue for read requests
+    type ReadRequest = {
+        groupName: string,
+        settingName: string,
+        resolve: (value: ReadGameSettingRespose) => void,
+        reject: (reason?: any) => void
+    };
+    const readQueue: ReadRequest[] = [];
+    let isProcessingReadQueue = false;
+
+    const processReadQueue = async () => {
+        if (isProcessingReadQueue || readQueue.length === 0) return;
+        isProcessingReadQueue = true;
+        const { groupName, settingName, resolve, reject } = readQueue.shift()!;
+        try {
+            const result = await api.get<ReadGameSettingRespose>(`/settings/${groupName}/${settingName}`);
+            resolve(result.data);
+        } catch (err) {
+            reject(err);
+        } finally {
+            isProcessingReadQueue = false;
+            // Process next in queue
+            if (readQueue.length > 0) {
+                processReadQueue();
+            }
+        }
+    };
+
+    const readGameSettingValue = async(groupName: string, settingName: string): Promise<ReadGameSettingRespose> => {
+        return new Promise((resolve, reject) => {
+            readQueue.push({ groupName, settingName, resolve, reject });
+            processReadQueue();
+        });
     }
 
     const writeGameSettingValue = async(groupName: string, settingName: string, value: unknown, cancelTokenSource: CancelTokenSource | null = null) => {
