@@ -77,8 +77,6 @@ dialog {
 
 <script setup lang="ts">
 
-import { defineEmits } from 'vue';
-
 type DialogButton = {
     text: string;
     class?: string;

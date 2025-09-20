@@ -9,8 +9,6 @@
 <script setup lang="ts">
 import GenericDialog from './GenericDialog.vue';
 
-import { defineEmits } from 'vue';
-
 defineProps<{
     title: string;
     message: string;

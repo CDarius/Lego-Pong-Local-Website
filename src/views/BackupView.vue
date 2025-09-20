@@ -114,6 +114,7 @@ async function runBackup() {
     );
 
     let numCompletedSettings = 0;
+    let numSuccessSettings = 0;
     let numFailedSettings = 0;
 
     for (const group of settingStore.groups) {
@@ -123,7 +124,8 @@ async function runBackup() {
 
             try {
                 const response = await settingStore.readGameSettingValue(group.name, setting.name);
-                backup.push({ path: apiPath, value: response.data.value });
+                backup.push({ path: apiPath, value: response.value });
+                numSuccessSettings++;
             } catch (error) {
                 console.error(`Error reading setting value at "${apiPath}": `, error);
                 numFailedSettings++;
@@ -134,7 +136,7 @@ async function runBackup() {
 
         }
     }
-    return { backup: backup, success: numCompletedSettings, failed: numFailedSettings };
+    return { backup: backup, success: numSuccessSettings, failed: numFailedSettings };
 }
 
 // Prompt the user to save the backup
