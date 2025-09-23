@@ -36,26 +36,9 @@ function updateValue(event: Event) {
             </div>
         </div>
     </div>
-    <!-- <div class="input-group" :style="{ width: fieldWidth }">
-        <button v-if="stepChange != null" class="btn btn-secondary" type="button" @click="decrementValue()">
-            -
-        </button>
-        <input type="number" class="form-control text-end" :class="{ 'update-in-progress': props.updateInProgress }"
-            :value="internalValue" @change="updateValue($event)" />
-        <button v-if="stepChange != null" class="btn btn-secondary" type="button" @click="incrementValue()">
-            +
-        </button>
-    </div> -->
 </template>
 
 <style scoped>
-.update-in-progress {
-    -webkit-animation: 1s linear infinite progress-bar-stripes;
-    animation: 1s linear infinite progress-bar-stripes;
-    background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
-    background-size: 1rem 1rem;
-    background-color: #BAC8D3 !important;
-}
 
 .switch-container {
     /* Ensures the overlay is positioned relative to the switch */
