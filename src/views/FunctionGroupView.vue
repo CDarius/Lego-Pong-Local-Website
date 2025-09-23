@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useGameFunctionsStore } from '@/stores/game_functions'
+import { useGameFunctionsStore } from '@/stores/gameFunctions'
 import PageScrollableLayout from '@/components/PageScrollableLayout.vue'
 
 const route = useRoute();

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="functionsStore.groupsLoading"
+    <div v-if="axesInfoStore.axesLoading"
         class="h-100 w-100 d-flex flex-column justify-content-center align-items-center">
         <h3>Loading...</h3>
         <div class="spinner-border mt-2" style="width: 3rem; height: 3rem;" role="status">
@@ -7,25 +7,21 @@
         </div>
     </div>
 
-    <div v-else-if="functionsStore.groupsLoadingError" class="container-md">
+    <div v-else-if="axesInfoStore.axesLoadingError" class="container-md">
         <div class="alert alert-danger d-flex align-items-center mt-4" role="alert">
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
             <div>
-                {{ functionsStore.groupsLoadingError }}
+                {{ axesInfoStore.axesLoadingError }}
             </div>
         </div>
     </div>
 
     <PageScrollableLayout v-else>
-        <template v-slot:header>
-            <SaveReloadSettings />
-        </template>
-
         <div class="container-md my-3">
             <div class="list-group">
-                <router-link v-for="group in functionsStore.groups" :to="'/functions/' + group.name" :key="group.name"
+                <router-link v-for="axis in axesInfoStore.axes" :to="'/axistuning/' + axis.name" :key="axis.name"
                     class="list-group-item list-group-item-action">
-                    {{ group.title }}
+                    {{ axis.name.toUpperCase() }}-Axis
                     <i class="bi bi-chevron-right float-end"></i>
                 </router-link>
             </div>
@@ -35,17 +31,14 @@
 
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
-import { useGameFunctionsStore } from '@/stores/gameFunctions';
+import { useAxesInfoStore } from '@/stores/axesInfo';
 import PageScrollableLayout from '@/components/PageScrollableLayout.vue';
-import SaveReloadSettings from '@/components/settings/SaveReloadSettings.vue';
 
-const functionsStore = useGameFunctionsStore();
+const axesInfoStore = useAxesInfoStore();
 
 onBeforeMount(() => {
-    if (functionsStore.groups == null || functionsStore.groups.length == 0)
-        functionsStore.fetchGameFunctionsList();
+    if (axesInfoStore.axes == null || axesInfoStore.axes.length == 0)
+        axesInfoStore.fetchAxesInfo();
 });
 
 </script>
-
-<style scoped></style>

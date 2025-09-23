@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
-import { useGameSettingsStore } from '@/stores/game_settings'
+import { useGameSettingsStore } from '@/stores/gameSettings'
 import PageScrollableLayout from '@/components/PageScrollableLayout.vue'
 import SaveReloadSettings from '@/components/settings/SaveReloadSettings.vue';
 

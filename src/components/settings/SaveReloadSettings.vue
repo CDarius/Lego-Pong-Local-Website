@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import { ref, } from 'vue';
-import { useGameSettingsStore } from '@/stores/game_settings'
+import { useGameSettingsStore } from '@/stores/gameSettings'
 import SpinnerBackdrop from '@/components/SpinnerBackdrop.vue';
 import GenericDialog from '@/components/dialogs/GenericDialog.vue';
 import ErrorDialog from '@/components/dialogs/ErrorDialog.vue';

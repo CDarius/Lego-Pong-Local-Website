@@ -60,7 +60,7 @@
 import { computed, ref, onBeforeMount, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import api from '@/api/api';
-import { useGameFunctionsStore } from '@/stores/game_functions'
+import { useGameFunctionsStore } from '@/stores/gameFunctions'
 import PageScrollableLayout from '@/components/PageScrollableLayout.vue';
 import ErrorDialog from '@/components/dialogs/ErrorDialog.vue';
 import type { GetFunctionStatusResponse, GetFunctionPrerequisitesResponse, GetFunctionStartResponse } from '@/api/functionsApi';

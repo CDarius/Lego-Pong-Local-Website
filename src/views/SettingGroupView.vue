@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
-import { useGameSettingsStore } from '@/stores/game_settings'
+import { useGameSettingsStore } from '@/stores/gameSettings'
 import PageScrollableLayout from '@/components/PageScrollableLayout.vue'
 import EditSetting from '@/components/settings/EditSetting.vue';
 

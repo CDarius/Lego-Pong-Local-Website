@@ -5,7 +5,7 @@ import type { CancelTokenSource } from 'axios';
 import { debounce } from '@/utils/debounce';
 import type { GameSettingItem } from '@/api/settingsApi';
 import NumericValueEditor from '../NumericValueEditor.vue';
-import { useGameSettingsStore } from '@/stores/game_settings'
+import { useGameSettingsStore } from '@/stores/gameSettings'
 import BooleanValueEditor from '../BooleanValueEditor.vue';
 
 const props = defineProps<{

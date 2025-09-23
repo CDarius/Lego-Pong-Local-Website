@@ -64,7 +64,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useGameSettingsStore } from '@/stores/game_settings'
+import { useGameSettingsStore } from '@/stores/gameSettings'
 import GenericDialog from '@/components/dialogs/GenericDialog.vue';
 
 const settingStore = useGameSettingsStore();

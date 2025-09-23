@@ -7,6 +7,8 @@ import FunctionGroupView from '@/views/FunctionGroupView.vue'
 import FunctionView from '@/views/FunctionView.vue'
 import BackupView from '@/views/BackupView.vue'
 import RestoreView from '@/views/RestoreView.vue'
+import AxesTuningView from '@/views/AxesTuningView.vue'
+import AxisTuningView from '@/views/AxisTuningView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +39,15 @@ const router = createRouter({
     {
       path: '/functions/:group/:function',
       component: FunctionView
+    },
+    {
+      path: '/axistuning',
+      name: 'axistuning',
+      component: AxesTuningView
+    },
+    {
+      path: '/axistuning/:axis',
+      component: AxisTuningView
     },
     {
       path: '/backup',

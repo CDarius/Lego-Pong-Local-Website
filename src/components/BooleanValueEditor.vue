@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<{
     value: boolean,
