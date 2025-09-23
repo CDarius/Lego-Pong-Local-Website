@@ -6,6 +6,7 @@ import { debounce } from '@/utils/debounce';
 import type { GameSettingItem } from '@/api/settingsApi';
 import NumericValueEditor from '../NumericValueEditor.vue';
 import { useGameSettingsStore } from '@/stores/game_settings'
+import BooleanValueEditor from '../BooleanValueEditor.vue';
 
 const props = defineProps<{
     groupName: string,
@@ -16,11 +17,19 @@ const settingStore = useGameSettingsStore();
 
 const loadingValue = ref(true);
 const loadingValueFailed = ref(false);
-const settingValue = ref(0);
+const settingValue = ref<number|boolean>(0);
 const updateInProgress = ref(false);
 
 const showValueEditor = computed(() => {
     return !loadingValue.value && !loadingValueFailed.value;
+});
+
+const numberSettingValue = computed(() => {
+    return typeof settingValue.value === 'number' ? settingValue.value : 0;
+});
+
+const booleanSettingValue = computed(() => {
+    return typeof settingValue.value === 'boolean' ? settingValue.value : false;
 });
 
 onBeforeMount(() => {
@@ -49,7 +58,7 @@ defineExpose({
 
 let cancelTokenSource: CancelTokenSource | null = null;
 
-const debouncedUpdateValue = debounce(async (value: number) => {
+const debouncedUpdateValue = debounce(async (value: number|boolean) => {
     // Cancel previous request
     if (cancelTokenSource) {
         cancelTokenSource.cancel('Previous request canceled');
@@ -71,12 +80,14 @@ const debouncedUpdateValue = debounce(async (value: number) => {
     }
 }, 1000);
 
-function updateSettingValue(value: number) {
-    if (props.setting.minValue != null && value < props.setting.minValue) {
-        value = props.setting.minValue;
-    }
-    if (props.setting.maxValue != null && value > props.setting.maxValue) {
-        value = props.setting.maxValue;
+function updateSettingValue(value: number|boolean) {
+    if (typeof value === 'number') {
+        if (props.setting.minValue != null && value < props.setting.minValue) {
+            value = props.setting.minValue;
+        }
+        if (props.setting.maxValue != null && value > props.setting.maxValue) {
+            value = props.setting.maxValue;
+        }
     }
     if (value !== settingValue.value) {
         updateInProgress.value = true;
@@ -102,7 +113,10 @@ function updateSettingValue(value: number) {
             </div>
             <div v-if="showValueEditor" class="d-flex justify-content-end align-items-center">
                 <div class="me-2">{{ setting.unit }}</div>
-                <NumericValueEditor :value="settingValue" :step-change="setting.stepChange"
+                <BooleanValueEditor v-if="setting.type == 'bool'" :value="booleanSettingValue" @updateValue="updateSettingValue"
+                    :update-in-progress="updateInProgress">
+                </BooleanValueEditor>
+                <NumericValueEditor v-else :value="numberSettingValue" :step-change="setting.stepChange"
                     :min-value="setting.minValue" class="float-end" :max-value="setting.maxValue"
                     :update-in-progress="updateInProgress" @updateValue="updateSettingValue">
                 </NumericValueEditor>

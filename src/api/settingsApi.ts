@@ -22,11 +22,11 @@ export interface ListGameSettingsResponse {
 export interface ReadGameSettingRespose {
     group: string;
     name: string;
-    value: number;
+    value: number|boolean;
 }
 
 export interface WriteGameSettingRespose {
     group: string;
     name: string;
-    value: number;
+    value: number|boolean;
 }
