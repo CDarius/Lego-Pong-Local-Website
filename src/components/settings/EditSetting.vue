@@ -8,10 +8,16 @@ import NumericValueEditor from '../NumericValueEditor.vue';
 import { useGameSettingsStore } from '@/stores/gameSettings'
 import BooleanValueEditor from '../BooleanValueEditor.vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     groupName: string,
     setting: GameSettingItem,
-}>();
+    valueOnly?: boolean,
+    showUnit?: boolean
+}>(), {
+    valueOnly: false,
+    showUnit: true
+});
+
 
 const settingStore = useGameSettingsStore();
 
@@ -98,7 +104,7 @@ function updateSettingValue(value: number|boolean) {
 </script>
 
 <template>
-    <div class="card">
+    <div v-if="!props.valueOnly" class="card">
         <div class="card-body">
             <h5 class="card-title">{{ setting.title }}</h5>
             <p class="card-text">{{ setting.description }}</p>
@@ -112,7 +118,7 @@ function updateSettingValue(value: number|boolean) {
                 Value read failed
             </div>
             <div v-if="showValueEditor" class="d-flex justify-content-end align-items-center">
-                <div class="me-2">{{ setting.unit }}</div>
+                <div v-if="props.showUnit" class="me-2">{{ setting.unit }}</div>
                 <BooleanValueEditor v-if="setting.type == 'bool'" :value="booleanSettingValue" @updateValue="updateSettingValue"
                     :update-in-progress="updateInProgress">
                 </BooleanValueEditor>
@@ -123,4 +129,24 @@ function updateSettingValue(value: number|boolean) {
             </div>
         </div>
     </div>
+    <div v-else>
+        <div v-if="loadingValue" class="spinner-border float-end" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div v-if="loadingValueFailed" class="float-end text-danger">
+            <i class="bi bi-exclamation-triangle"></i>
+            Value read failed
+        </div>
+        <div v-if="showValueEditor" class="d-flex align-items-center">
+            <div v-if="props.showUnit" class="me-2">{{ setting.unit }}</div>
+            <BooleanValueEditor v-if="setting.type == 'bool'" :value="booleanSettingValue" @updateValue="updateSettingValue"
+                :update-in-progress="updateInProgress">
+            </BooleanValueEditor>
+            <NumericValueEditor v-else :value="numberSettingValue" :step-change="setting.stepChange"
+                :min-value="setting.minValue" :max-value="setting.maxValue"
+                :update-in-progress="updateInProgress" @updateValue="updateSettingValue">
+            </NumericValueEditor>
+        </div>
+    </div>
+
 </template>
