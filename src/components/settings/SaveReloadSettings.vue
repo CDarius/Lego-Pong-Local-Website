@@ -29,21 +29,27 @@
 
     <ErrorDialog :title="'Error'" :message="errorText" v-model:isOpen="showError" />
 
-    <div class="bg-light py-3">
-        <div class="container-md text-center">
-            <div class="row justify-content-center">
-                <div class="col col-md-3">
-                    <button type="button" class="btn btn-secondary w-100" @click="clickSaveSettings">
-                        <i class="bi bi-floppy me-2"></i> Save
-                    </button>
-                </div>
-                <div class="col col-md-3">
-                    <button type="button" class="btn btn-warning w-100" @click="clickReloadSettings">
-                        <i class="bi bi-arrow-clockwise me-2"></i> Reload
-                    </button>
-                </div>
-            </div>
+    <div v-if="wholeWidth" class="bg-light py-3">
+        <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary ms-3 me-3" :style="{ width: buttonsWidth }"
+                @click="clickSaveSettings">
+                <i class="bi bi-floppy me-2"></i> Save
+            </button>
+            <button type="button" class="btn btn-warning ms-3 me-3" :style="{ width: buttonsWidth }"
+                @click="clickReloadSettings">
+                <i class="bi bi-arrow-clockwise me-2"></i> Reload
+            </button>
         </div>
+    </div>
+    <div v-else class="d-flex justify-content-start">
+        <button type="button" class="btn btn-secondary me-2" :style="{ width: buttonsWidth }"
+            @click="clickSaveSettings">
+            <i class="bi bi-floppy me-2"></i> Save
+        </button>
+        <button type="button" class="btn btn-warning" :style="{ width: buttonsWidth }"
+            @click="clickReloadSettings">
+            <i class="bi bi-arrow-clockwise me-2"></i> Reload
+        </button>
     </div>
 </template>
 
@@ -53,6 +59,14 @@ import { useGameSettingsStore } from '@/stores/gameSettings'
 import SpinnerBackdrop from '@/components/SpinnerBackdrop.vue';
 import GenericDialog from '@/components/dialogs/GenericDialog.vue';
 import ErrorDialog from '@/components/dialogs/ErrorDialog.vue';
+
+const props = withDefaults(defineProps<{
+    wholeWidth?: boolean;
+    buttonsWidth?: string;
+}>(), {
+    wholeWidth: true,
+    buttonsWidth: '10em'
+});
 
 const saving = ref(false);
 const restoring = ref(false);

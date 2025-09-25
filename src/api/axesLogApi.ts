@@ -5,3 +5,12 @@ export interface AxisLogResponse {
     col_units: string[];
     data: number[][];
 }
+
+export enum AxisLogColumns {
+  ActualPosition = 1,
+  ActualSpeed = 2,
+  ActualPwmOutput = 4,
+  PositionSetpoint = 5,
+  SpeedSetpoint = 6,
+  PositionError = 7,
+}
