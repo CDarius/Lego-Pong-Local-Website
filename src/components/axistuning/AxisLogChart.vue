@@ -66,7 +66,7 @@ const chartOptions = {
         title: { display: true, text: 'Axis Log Time Series' }
     },
     scales: {
-        x: { title: { display: true, text: props.log.col_names[0] } },
+        x: { title: { display: false, text: props.log.col_names[0] } },
         y: {
             title: { display: true, text: 'Axis Values' },
             position: 'left'

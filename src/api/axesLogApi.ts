@@ -9,6 +9,7 @@ export interface AxisLogResponse {
 export enum AxisLogColumns {
   ActualPosition = 1,
   ActualSpeed = 2,
+  ActuationType = 3,
   ActualPwmOutput = 4,
   PositionSetpoint = 5,
   SpeedSetpoint = 6,

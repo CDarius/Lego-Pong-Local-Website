@@ -1,55 +1,57 @@
 <template>
-    <SpinnerBackdrop v-if="saving" text="Saving..." />
-    <SpinnerBackdrop v-if="restoring" text="Restoring..." />
+    <div>
+        <SpinnerBackdrop v-if="saving" text="Saving..." />
+        <SpinnerBackdrop v-if="restoring" text="Restoring..." />
 
-    <GenericDialog title="Attenzione" titleClass="text-bg-warning" title-icon="bi-exclamation-triangle-fill"
-        v-model:is-open="showReloadParamDialog" :buttons="[
+        <GenericDialog title="Attenzione" titleClass="text-bg-warning" title-icon="bi-exclamation-triangle-fill"
+            v-model:is-open="showReloadParamDialog" :buttons="[
+                { text: 'Annulla', class: 'btn-secondary' },
+                {
+                    text: 'Continua', class: 'btn-warning', callback: async () => {
+                        await reloadSettings();
+                    }
+                }
+            ]">
+            Tutte le modifiche non salvate verranno sovrascritte.
+            Sei sicuro di voler continuare?
+        </GenericDialog>
+
+        <GenericDialog title="Salvataggio" title-icon="floppy" v-model:is-open="showSaveParamDialog" :buttons="[
             { text: 'Annulla', class: 'btn-secondary' },
             {
-                text: 'Continua', class: 'btn-warning', callback: async () => {
-                    await reloadSettings();
+                text: 'Salva', class: 'btn-primary', callback: async () => {
+                    await saveSettings();
                 }
             }
         ]">
-        Tutte le modifiche non salvate verranno sovrascritte.
-        Sei sicuro di voler continuare?
-    </GenericDialog>
+            I valori attuali dei parametri verranno salvati, non sarà possibile tornare ai valori precedenti.
+            Sei sicuro di voler continuare?
+        </GenericDialog>
 
-    <GenericDialog title="Salvataggio" title-icon="floppy" v-model:is-open="showSaveParamDialog" :buttons="[
-        { text: 'Annulla', class: 'btn-secondary' },
-        {
-            text: 'Salva', class: 'btn-primary', callback: async () => {
-                await saveSettings();
-            }
-        }
-    ]">
-        I valori attuali dei parametri verranno salvati, non sarà possibile tornare ai valori precedenti.
-        Sei sicuro di voler continuare?
-    </GenericDialog>
+        <ErrorDialog :title="'Error'" :message="errorText" v-model:isOpen="showError" />
 
-    <ErrorDialog :title="'Error'" :message="errorText" v-model:isOpen="showError" />
-
-    <div v-if="wholeWidth" class="bg-light py-3">
-        <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-secondary ms-3 me-3" :style="{ width: buttonsWidth }"
+        <div v-if="wholeWidth" class="bg-light py-3">
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary ms-3 me-3" :style="{ width: buttonsWidth }"
+                    @click="clickSaveSettings">
+                    <i class="bi bi-floppy me-2"></i> Save
+                </button>
+                <button type="button" class="btn btn-warning ms-3 me-3" :style="{ width: buttonsWidth }"
+                    @click="clickReloadSettings">
+                    <i class="bi bi-arrow-clockwise me-2"></i> Reload
+                </button>
+            </div>
+        </div>
+        <div v-else class="d-flex justify-content-start">
+            <button type="button" class="btn btn-secondary me-2" :style="{ width: buttonsWidth }"
                 @click="clickSaveSettings">
                 <i class="bi bi-floppy me-2"></i> Save
             </button>
-            <button type="button" class="btn btn-warning ms-3 me-3" :style="{ width: buttonsWidth }"
+            <button type="button" class="btn btn-warning" :style="{ width: buttonsWidth }"
                 @click="clickReloadSettings">
                 <i class="bi bi-arrow-clockwise me-2"></i> Reload
             </button>
         </div>
-    </div>
-    <div v-else class="d-flex justify-content-start">
-        <button type="button" class="btn btn-secondary me-2" :style="{ width: buttonsWidth }"
-            @click="clickSaveSettings">
-            <i class="bi bi-floppy me-2"></i> Save
-        </button>
-        <button type="button" class="btn btn-warning" :style="{ width: buttonsWidth }"
-            @click="clickReloadSettings">
-            <i class="bi bi-arrow-clockwise me-2"></i> Reload
-        </button>
     </div>
 </template>
 

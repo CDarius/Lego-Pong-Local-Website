@@ -61,6 +61,12 @@
         <AxisLogChart v-if="lastAxisLog"
             :log="lastAxisLog.log"
             class="mx-3"/>
+
+        <!-- Axis Log Analysis -->
+        <AxisLogAnalysis v-if="lastAxisLog && axisInfo"
+            :log="lastAxisLog.log"
+            :axis-info="axisInfo"
+            class="mx-3 mt-3"/>
     </PageScrollableLayout>
 </template>
 
@@ -81,7 +87,8 @@ import PageScrollableLayout from '@/components/PageScrollableLayout.vue';
 import EditSetting from '@/components/settings/EditSetting.vue';
 import SaveReloadSettings from '@/components/settings/SaveReloadSettings.vue';
 import ExecuteWebFunction from '@/components/functions/ExecuteWebFunction.vue';
-import AxisLogChart from '@/components/charts/AxisLogChart.vue';
+import AxisLogChart from '@/components/axistuning/AxisLogChart.vue';
+import AxisLogAnalysis from '@/components/axistuning/AxisLogAnalysis.vue';
 
 const settingStore = useGameSettingsStore();
 const functionsStore = useGameFunctionsStore();
