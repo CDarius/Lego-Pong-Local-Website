@@ -9,6 +9,7 @@ import BackupView from '@/views/BackupView.vue'
 import RestoreView from '@/views/RestoreView.vue'
 import AxesTuningView from '@/views/AxesTuningView.vue'
 import AxisTuningView from '@/views/AxisTuningView.vue'
+import GameLogView from '@/views/GameLogView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +49,11 @@ const router = createRouter({
     {
       path: '/axistuning/:axis',
       component: AxisTuningView
+    },
+    {
+      path: '/gamelog',
+      name: 'gamelog',
+      component: GameLogView
     },
     {
       path: '/backup',
