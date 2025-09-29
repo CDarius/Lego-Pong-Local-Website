@@ -56,6 +56,11 @@ export const useAxesLogStore = defineStore('axeslog', () => {
         await api.get(`/axislog/stop/${axis}`);
     }
 
+    const isLogRunning = async(axis: string) => {
+        const response = await api.get<{ running: boolean }>(`/axislog/running/${axis}`);
+        return response.data.running;
+    }
+
     const downloadLastLog = async(axis: string, counts_per_unit: number, pidSettings: AxisPidSettings) => {
         const response = await api.get<AxisLogResponse>(`/axislog/read/${axis}`);
         const convertedLog = convertFromCountToStuds(response.data, counts_per_unit);
@@ -75,6 +80,7 @@ export const useAxesLogStore = defineStore('axeslog', () => {
         logs,
         startLogging,
         stopLogging,
+        isLogRunning,
         downloadLastLog
     };
 });

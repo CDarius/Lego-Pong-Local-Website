@@ -1,4 +1,7 @@
 <template>
+    <ErrorDialog title="Error" v-model:isOpen="showDialogError" :message="dialogErrorMessage">
+    </ErrorDialog>
+
     <PageScrollableLayout>
         <template v-slot:header>
             <div class="py-2 ps-2 bg-light">
@@ -44,6 +47,12 @@
                         :setting="integraleRateSetting!" :value-only="true"
                         :show-unit="false" class="mb-3"/>
                     </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                        <div><strong>Acceleration:</strong></div>
+                        <EditSetting :group-name="settingGroupName" 
+                            :setting="maxAccelerationSetting!" :value-only="true"
+                            :show-unit="false" class="mb-3"/>
+                    </div>
                 </div>
                 <div class="row mt-2">
                     <SaveReloadSettings :group-name="settingGroupName" 
@@ -67,6 +76,17 @@
             :log="lastAxisLog.log"
             :axis-info="axisInfo"
             class="mx-3 mt-3"/>
+
+        <div class="d-grid mt-3 mb-3">
+            <button v-if="!loggingInProgress" type="button" class="btn btn-primary mx-2" style="min-width: 180px"
+                @click="startLogging()">
+                Start logging (10s)
+            </button>
+            <button v-if="loggingInProgress" type="button" class="btn btn-secondary mx-2" style="min-width: 180px"
+                @click="stopLogging()">
+                Stop logging
+            </button>
+        </div>
     </PageScrollableLayout>
 </template>
 
@@ -89,6 +109,8 @@ import SaveReloadSettings from '@/components/settings/SaveReloadSettings.vue';
 import ExecuteWebFunction from '@/components/functions/ExecuteWebFunction.vue';
 import AxisLogChart from '@/components/axistuning/AxisLogChart.vue';
 import AxisLogAnalysis from '@/components/axistuning/AxisLogAnalysis.vue';
+import ErrorDialog from '@/components/dialogs/ErrorDialog.vue';
+
 
 const settingStore = useGameSettingsStore();
 const functionsStore = useGameFunctionsStore();
@@ -111,12 +133,14 @@ const pidKiSettingName = 'pid_ki';
 const pidKdSettingName = 'pid_kd';
 const integralRangeSettingName = 'intgral_rng';
 const integraleRateSettingName = 'intgral_rate';
+const maxAccelerationSettingName = 'max_acc';
 
 const pidKpSetting = ref<GameSettingItem>();
 const pidKiSetting = ref<GameSettingItem>();
 const pidKdSetting = ref<GameSettingItem>();
 const integralRangeSetting = ref<GameSettingItem>();
 const integraleRateSetting = ref<GameSettingItem>();
+const maxAccelerationSetting = ref<GameSettingItem>();
 
 const stepFunctionGroup = ref<GameFunctionsGroup>();
 const stepFunction = ref<GameFunctionItem>();
@@ -128,6 +152,11 @@ const lastAxisLog = computed(() => {
     }
     return null;
 });
+
+const showDialogError = ref(false);
+const dialogErrorMessage = ref('');
+
+const loggingInProgress = ref(false);
 
 onBeforeMount(() => {
     // Test axisInfo exists
@@ -148,8 +177,9 @@ onBeforeMount(() => {
     pidKdSetting.value = settingGroup.value.settings.find(s => s.name === pidKdSettingName);
     integralRangeSetting.value = settingGroup.value.settings.find(s => s.name === integralRangeSettingName);
     integraleRateSetting.value = settingGroup.value.settings.find(s => s.name === integraleRateSettingName);
+    maxAccelerationSetting.value = settingGroup.value.settings.find(s => s.name === maxAccelerationSettingName);
 
-    if (!pidKpSetting.value || !pidKiSetting.value || !pidKdSetting.value || !integralRangeSetting.value || !integraleRateSetting.value) {
+    if (!pidKpSetting.value || !pidKiSetting.value || !pidKdSetting.value || !integralRangeSetting.value || !integraleRateSetting.value || !maxAccelerationSetting.value) {
         console.error(`One or more PID settings not found in group '${settingGroupName.value}'.`);
         return;
     }
@@ -168,21 +198,52 @@ onBeforeMount(() => {
         return;
     }
 
+    updateLogRunningState();
+
     initDone.value = true;
 });
 
-async function testLogging() {
-    const pidSettings = await readPidSettings();
-    await axesLogStore.startLogging(axisName);
-    setTimeout(async () => {
+async function startLogging() {
+    try {
+        await axesLogStore.startLogging(axisName, 10);
+        loggingInProgress.value = true;
+        updateLogRunningState();
+    } catch (error) {
+        dialogErrorMessage.value = "Failed to start logging: " + (error instanceof Error ? error.message : String(error));
+        showDialogError.value = true;
+    }
+}
+
+async function stopLogging() {
+    try {
         await axesLogStore.stopLogging(axisName);
-        await axesLogStore.downloadLastLog(axisName, axisInfo.value!.counts_per_unit, pidSettings); 
-    }, 10000);
+        loggingInProgress.value = false;
+        await downloadAndDisplayLastLog();
+    } catch (error) {
+        dialogErrorMessage.value = "Failed to stop logging: " + (error instanceof Error ? error.message : String(error));
+        showDialogError.value = true;
+    }
 }
 
 async function downloadAndDisplayLastLog() {
     const pidSettings = await readPidSettings();
     await axesLogStore.downloadLastLog(axisName, axisInfo.value!.counts_per_unit, pidSettings); 
+}
+
+async function updateLogRunningState() {
+    let lastStatus = loggingInProgress.value;
+    do {
+        try {
+            loggingInProgress.value = await axesLogStore.isLogRunning(axisName);
+            if (!loggingInProgress.value && lastStatus) {
+                // Logging just finished
+                await downloadAndDisplayLastLog();
+            }
+        } catch (error) {
+            // Retry after a short delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+    } while (loggingInProgress.value);
 }
 
 async function readPidSettings(): Promise<AxisPidSettings> {
