@@ -59,8 +59,6 @@ import ErrorDialog from '@/components/dialogs/ErrorDialog.vue';
 import type { GetFunctionStatusResponse, GetFunctionPrerequisitesResponse, GetFunctionStartResponse } from '@/api/functionsApi';
 import { FunctionStatus } from '@/api/functionsApi';
 
-import { watch } from 'vue';
-
 const props = defineProps<{
     functionGroupName: string,
     webFunctionName: string,
