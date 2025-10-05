@@ -1,4 +1,4 @@
 export interface GetGameLogResponse {
-    col_names: string[];
+    cols_names: string[];
     data: number[][];
 }
