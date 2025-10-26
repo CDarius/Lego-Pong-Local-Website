@@ -48,6 +48,14 @@
                         :show-unit="false" class="mb-3"/>
                     </div>
                     <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                        <div><strong>Max windup factor:</strong></div>
+                        <EditSetting :group-name="settingGroupName" 
+                            :setting="maxWindupFactorSetting!" :value-only="true"
+                            :show-unit="false" class="mb-3"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-2">
                         <div><strong>Acceleration:</strong></div>
                         <EditSetting :group-name="settingGroupName" 
                             :setting="maxAccelerationSetting!" :value-only="true"
@@ -134,6 +142,7 @@ const pidKdSettingName = 'pid_kd';
 const integralRangeSettingName = 'intgral_rng';
 const integraleRateSettingName = 'intgral_rate';
 const maxAccelerationSettingName = 'max_acc';
+const maxWindupFactorSettingName = 'max_windup_fac';
 
 const pidKpSetting = ref<GameSettingItem>();
 const pidKiSetting = ref<GameSettingItem>();
@@ -141,6 +150,7 @@ const pidKdSetting = ref<GameSettingItem>();
 const integralRangeSetting = ref<GameSettingItem>();
 const integraleRateSetting = ref<GameSettingItem>();
 const maxAccelerationSetting = ref<GameSettingItem>();
+const maxWindupFactorSetting = ref<GameSettingItem>();
 
 const stepFunctionGroup = ref<GameFunctionsGroup>();
 const stepFunction = ref<GameFunctionItem>();
@@ -178,9 +188,34 @@ onBeforeMount(() => {
     integralRangeSetting.value = settingGroup.value.settings.find(s => s.name === integralRangeSettingName);
     integraleRateSetting.value = settingGroup.value.settings.find(s => s.name === integraleRateSettingName);
     maxAccelerationSetting.value = settingGroup.value.settings.find(s => s.name === maxAccelerationSettingName);
+    maxWindupFactorSetting.value = settingGroup.value.settings.find(s => s.name === maxWindupFactorSettingName);
 
-    if (!pidKpSetting.value || !pidKiSetting.value || !pidKdSetting.value || !integralRangeSetting.value || !integraleRateSetting.value || !maxAccelerationSetting.value) {
-        console.error(`One or more PID settings not found in group '${settingGroupName.value}'.`);
+    if (!pidKpSetting.value) {
+        console.error(`PID setting '${pidKpSettingName}' not found in group '${settingGroupName.value}'.`);
+        return;
+    }
+    if (!pidKiSetting.value) {
+        console.error(`PID setting '${pidKiSettingName}' not found in group '${settingGroupName.value}'.`);
+        return;
+    }
+    if (!pidKdSetting.value) {
+        console.error(`PID setting '${pidKdSettingName}' not found in group '${settingGroupName.value}'.`);
+        return;
+    }
+    if (!integralRangeSetting.value) {
+        console.error(`PID setting '${integralRangeSettingName}' not found in group '${settingGroupName.value}'.`);
+        return;
+    }
+    if (!integraleRateSetting.value) {
+        console.error(`PID setting '${integraleRateSettingName}' not found in group '${settingGroupName.value}'.`);
+        return;
+    }
+    if (!maxAccelerationSetting.value) {
+        console.error(`PID setting '${maxAccelerationSettingName}' not found in group '${settingGroupName.value}'.`);
+        return;
+    }
+    if (!maxWindupFactorSetting.value) {
+        console.error(`PID setting '${maxWindupFactorSettingName}' not found in group '${settingGroupName.value}'.`);
         return;
     }
 

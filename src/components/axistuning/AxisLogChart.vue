@@ -16,8 +16,9 @@ import {
     Title,
     CategoryScale,
     Legend,
-    Tooltip
+    Tooltip,
 } from 'chart.js'
+import type { ChartOptions } from 'chart.js'
 import type { AxisLogResponse } from '@/api/axesLogApi'
 import { AxisLogColumns } from '@/api/axesLogApi'
 
@@ -59,7 +60,7 @@ const chartData = computed(() => {
     }
 })
 
-const chartOptions = {
+const chartOptions: ChartOptions<'line'> = {
     responsive: true,
     plugins: {
         legend: { display: true },
